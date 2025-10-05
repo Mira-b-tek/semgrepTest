@@ -15,6 +15,7 @@ jobs:
 
     permissions:
       contents: read
+      security-events: write  # needed if uploading SARIF to GitHub Security tab
 
     steps:
       - name: Checkout repository
@@ -26,15 +27,16 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-
       - name: Build project
         run: mvn clean compile -DskipTests
         working-directory: demo
 
-      - name: Install Semgrep
-        run: pip install semgrep
 
-      # 🕵️ Run Semgrep using rules in demo/.semgrep-rules/
-      - name: Run Semgrep with local custom rules
-        run: semgrep --config .semgrep-rules/ --error
-        working-directory: demo
+      - name: Run Semgrep
+        uses: returntocorp/semgrep-action@v1
+        with:
+          config: demo/.semgrep-rules/   # your local custom rule folder
+          workdir: demo                  # where the pom.xml and source code are
+          auditOn: push                  # optional: when to run (push/pull_request/workflow_dispatch)
+          generateSarif: true
+          strict: true
