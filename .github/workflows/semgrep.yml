@@ -1,6 +1,5 @@
-name: Semgrep Scan
+name: Semgrep Full Scan
 
-# Triggers
 on:
   push:
     branches:
@@ -14,21 +13,37 @@ on:
   schedule:
     # daily scan at 22:59 UTC (randomized to avoid GH load spike)
     - cron: '59 22 * * *'
-
 jobs:
-  semgrep:
-    name: Run Semgrep
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    steps:
-      # Checkout code
-      - name: Checkout repository
-        uses: actions/checkout@v4
 
-      # Run Semgrep using the official GitHub Action
-      - name: Semgrep scan
-        uses: returntocorp/semgrep-action
+  semgrep-full:
+    runs-on: ubuntu-latest
+    container:
+      image: returntocorp/semgrep
+
+    steps:
+
+      # step 1
+      - name: clone application source code
+        uses: actions/checkout@v3
+
+      # step 2
+      - name: full scan
+        run: |
+          semgrep \
+            --sarif --output report.sarif \
+            --metrics=off \
+            --config="p/default"
+
+      # step 3
+
+      - name: save report as pipeline artifact
+        uses: actions/upload-artifact@v3
         with:
-          config: .semgrep-rules/
-          fail-on: error
+          name: report.sarif
+          path: report.sarif
+
+      # step 4
+      - name: Download report
+        uses: actions/download-artifact@v2
+        with:
+          name: report.sarif
