@@ -28,7 +28,7 @@ jobs:
 
       # Run Semgrep using the official GitHub Action
       - name: Semgrep scan
-        uses: returntocorp/semgrep-action@v1.13.0
+        uses: returntocorp/semgrep-action
         with:
           config: .semgrep-rules/
           fail-on: error
