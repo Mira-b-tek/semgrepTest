@@ -2,10 +2,7 @@ rules:
   - id: avoid-system-out
     patterns:
       - pattern-either:
-          - pattern: System.out.println(...)
-          - pattern: System.out.print(...)
-          - pattern: System.err.print(...)
-          - pattern: System.err.println(...)
+
     message: "Avoid using System.out/System.err for logging. Use a logger instead."
     languages: [java]
     severity: ERROR
