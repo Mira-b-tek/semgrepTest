@@ -36,5 +36,5 @@ jobs:
         uses: returntocorp/semgrep-action@v1
         with:
           config: demo/.semgrep-rules/
-          generateSarif: true
+
 
