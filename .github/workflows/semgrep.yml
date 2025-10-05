@@ -1,27 +1,37 @@
+name: Semgrep Security Scan
+
 on:
   workflow_dispatch: {}
-  pull_request: {}
+  pull_request:
   push:
     branches:
       - main
       - master
-    paths:
-      - .github/workflows/semgrep.yml
-  schedule:
-    # random HH:MM to avoid a load spike on GitHub Actions at 00:00
-    - cron: 59 22 * * *
-name: Semgrep
+
 jobs:
   semgrep:
-    name: semgrep/ci
+    name: Run Semgrep Scan
     runs-on: ubuntu-latest
+
     permissions:
       contents: read
-    container:
-      image: semgrep/semgrep
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Run Semgrep with local rules
-        run: semgrep --config .semgrep-rules/
+      # (Optional) Cache Maven dependencies
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Build project
+        run: mvn clean compile -DskipTests
+
+      - name: Install Semgrep
+        run: pip install semgrep
+
+      - name: Run Semgrep with local custom rules
+        run: semgrep --config .semgrep-rules/ --error
