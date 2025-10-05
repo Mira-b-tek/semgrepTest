@@ -35,8 +35,8 @@ jobs:
       - name: Run Semgrep
         uses: returntocorp/semgrep-action@v1
         with:
-          config: demo/.semgrep-rules/   # your local custom rule folder
-          workdir: demo                  # where the pom.xml and source code are
-          auditOn: push                  # optional: when to run (push/pull_request/workflow_dispatch)
+          config: demo/.semgrep-rules/
+          workdir: demo
+          auditOn: push
           generateSarif: true
           strict: true
