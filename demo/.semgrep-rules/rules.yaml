@@ -1,0 +1,9 @@
+rules:
+  - id: avoid-system-out
+    patterns:
+      - pattern: System.out.$METHOD(..)
+    message: "Avoid using System.out.print* in production code. Use a logger instead."
+    languages: [java]
+    severity: ERROR
+    metadata:
+      category: testing
