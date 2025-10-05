@@ -36,7 +36,8 @@ jobs:
         uses: returntocorp/semgrep-action@v1
         with:
           config: demo/.semgrep-rules/
+          fail-on: error
           workdir: demo
           auditOn: push
           generateSarif: true
-          strict: true
+          strict: error
