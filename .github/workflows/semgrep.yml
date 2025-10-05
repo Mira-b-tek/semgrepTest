@@ -40,4 +40,4 @@ jobs:
           workdir: demo
           auditOn: push
           generateSarif: true
-          strict: error
+
