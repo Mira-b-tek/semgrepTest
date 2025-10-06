@@ -6,7 +6,9 @@ on:
       - main
     paths:
       - .github/workflows/semgrep.yml
+
 name: Semgrep
+
 jobs:
   buildmavenDepTree:
     runs-on: ubuntu-latest
@@ -28,6 +30,7 @@ jobs:
         with:
           name: mavendeptree
           path: demo/maven_dep_tree.txt
+
   semgrep:
     needs: buildmavenDepTree
     name: Scan
@@ -38,8 +41,22 @@ jobs:
       image: semgrep/semgrep
     steps:
       - uses: actions/checkout@v4
+
       - name: Download artifact from previous job
         uses: actions/download-artifact@v4
         with:
           name: mavendeptree
-      - run:  semgrep ci
+
+      - name: Run Semgrep and output SARIF
+        id: semgrep
+        run: semgrep ci --supply-chain demo --sarif output.sarif
+
+      - name: Fail if critical/high dependency found
+        run: |
+          # Check SARIF for CRITICAL or HIGH severity issues
+          if jq '.runs[].results[] | select(.properties.severity=="CRITICAL" or .properties.severity=="HIGH")' output.sarif | grep .; then
+            echo "Critical or high vulnerability found! Failing the job."
+            exit 1
+          else
+            echo "No critical/high issues found."
+          fi
