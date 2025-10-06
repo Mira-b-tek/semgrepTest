@@ -18,7 +18,7 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
       - name: Build with Maven
-        working-directory: demo //directory name
+        working-directory: demo
         run: mvn --batch-mode --update-snapshots package
       - name: Generate dependency tree
         working-directory: demo
