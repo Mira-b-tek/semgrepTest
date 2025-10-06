@@ -5,8 +5,8 @@ on:
     branches:
       - main
       - master
-    paths:
-      - '**/.github/workflows/semgrep.yml'
+#    paths:
+#      - '**/.github/workflows/semgrep.yml'
 
 name: Semgrep
 
