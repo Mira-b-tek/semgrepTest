@@ -49,7 +49,6 @@ jobs:
 
       - name: Run Semgrep supply-chain scan and fail on critical/high
         run: |
-          cd demo
           # Run supply-chain scan and save output
           semgrep ci  | tee scan_output.txt
 
