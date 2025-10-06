@@ -51,7 +51,7 @@ jobs:
         run: |
           cd demo
           # Run supply-chain scan and save output
-          semgrep ci --supply-chain | tee scan_output.txt
+          semgrep ci  | tee scan_output.txt
 
           # Fail job if any critical/high vulnerabilities are found
           if grep -E "CRITICAL|HIGH" scan_output.txt; then
