@@ -18,16 +18,16 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
       - name: Build with Maven
-        working-directory: demo //directory name
+        working-directory: demo
         run: mvn --batch-mode --update-snapshots package
       - name: Generate dependency tree
         working-directory: demo
-        run: mvn dependency:tree -DoutputFile=../maven_dep_tree.txt -DoutputType=text
+        run: mvn dependency:tree -DoutputFile=maven_dep_tree.txt -DoutputType=text
       - name: Upload Dependency Tree Artifact
         uses: actions/upload-artifact@v4
         with:
           name: mavendeptree
-          path: maven_dep_tree.txt
+          path: demo/maven_dep_tree.txt
   semgrep:
     needs: buildmavenDepTree
     name: Scan
