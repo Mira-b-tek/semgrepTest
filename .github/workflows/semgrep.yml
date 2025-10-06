@@ -50,10 +50,8 @@ jobs:
 
       - name: Run Semgrep supply-chain scan and fail on critical/high
         run: |
-          # Run supply-chain scan and save output
           semgrep ci  | tee scan_output.txt
 
-          # Fail job if any critical/high vulnerabilities are found
           if grep -E "CRITICAL|HIGH" scan_output.txt; then
             echo "Critical/high vulnerability found! Failing the job."
             exit 1
