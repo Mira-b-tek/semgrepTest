@@ -47,12 +47,19 @@ jobs:
         with:
           name: mavendeptree
 
-      - name: Run Semgrep and output SARIF
-        id: semgrep
-        run: semgrep ci --supply-chain demo --sarif output.sarif
+      - name: Run Semgrep supply-chain scan
+        run: |
+          cd demo
+          semgrep ci --supply-chain --sarif ../output.sarif
 
       - name: Fail if critical/high dependency found
         run: |
+          # Ensure jq is available
+          if ! command -v jq &> /dev/null; then
+            echo "jq could not be found, installing..."
+            sudo apt-get update && sudo apt-get install -y jq
+          fi
+
           # Check SARIF for CRITICAL or HIGH severity issues
           if jq '.runs[].results[] | select(.properties.severity=="CRITICAL" or .properties.severity=="HIGH")' output.sarif | grep .; then
             echo "Critical or high vulnerability found! Failing the job."
